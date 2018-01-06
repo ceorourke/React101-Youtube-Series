@@ -50,17 +50,22 @@ module.exports = {
     entry: './src/app.js',
     output: {
         path: path.resolve(__dirname, "dist"),
-        filename: 'app.bundle.js'
+        filename: '[name].bundle.js'
     },
     module: {
         rules: [
             {
-                test: /\.scss$/, 
+                test: /\.scss$/,  
                 use: ExtractTextPlugin.extract({
                     fallbackLoader: 'style-loader',
                     loader: ['css-loader', 'sass-loader'],
                     publicPath: '/dist'
                 })
+            },
+            {
+                test: /\.js$/,
+                exclude: /node_modules/,
+                use: 'babel-loader'
             }
         ]
 
@@ -78,8 +83,16 @@ module.exports = {
             //     collapseWhitespace: true
             // },
             hash: true,
+            // excludeChunks: ['contact'],
             template: './src/index.html',
         }),
+        // new HtmlWebpackPlugin({
+        //     title: 'Contact Page',
+        //     hash: true,
+        //     chunks: ['contact'], 
+        //     filename: 'contact.html',
+        //     template: './src/contact.html'
+        // }),
         new ExtractTextPlugin({
             filename: "app.css",
             disable: false,
