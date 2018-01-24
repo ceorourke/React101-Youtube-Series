@@ -7,7 +7,7 @@ export class App extends React.Component {
     super(props);
 
     this.state = {
-      buyItems: ['milk', 'bread', 'fruit'],
+      buyItems: ['algorithm', 'video tutorial', 'apply to jobs'],
       message: ''
     }
 
@@ -32,7 +32,7 @@ export class App extends React.Component {
         message: ''
       })
   }
-    this.addForm.reset(); // reset form and make input empty
+    this.addForm.reset(); // reset form and make input field empty
 }
 
   removeItem(item) {
@@ -44,6 +44,19 @@ export class App extends React.Component {
     this.setState({
       buyItems: [...newBuyItems]
     })
+
+    if(newBuyItems.length === 0) {
+      this.setState({
+          message: 'No items on your list, add some.'
+      })
+    }
+  }
+
+  clearAll() {
+    this.setState({
+      buyItems: [],
+      message: 'No items on your list, add some.'
+    })
   }
 
   render() {
@@ -51,12 +64,12 @@ export class App extends React.Component {
     return (
      <div>
       <header>
-        <h1>Shopping List</h1>
+        <h1>To Do List</h1>
 
         <form ref={input => this.addForm = input} className="form-inline" onSubmit={(e) => {this.addItem(e)}} >
           <div className="form-group">
-            <label className="sr-only" htmlFor="newItemInput">Add New Item</label>
-            <input ref={input => this.newItem = input} type="text" placeholder="Bread" className="form-control" id="newItemInput" />
+            <label className="sr-only" htmlFor="newItemInput">Add New Item </label>
+            <input ref={input => this.newItem = input} type="text" placeholder="code" className="form-control" id="newItemInput" />
           </div>
           <button type="submit" className="btn btn-primary">Add</button>
         </form>
@@ -65,10 +78,12 @@ export class App extends React.Component {
       </header>
       <div className="content">
       {
-        message !== '' && <p className="message text-danger">{message}</p>
+        (message !== '' || buyItems.length === 0) && <p className="message text-danger">{message}</p>
       }
+      {
+      // only show this if there are items in the list
+      buyItems.length > 0  &&
         <table className="table">
-          <caption>Shopping List</caption>
           <thead>
             <tr>
               <th>#</th>
@@ -85,7 +100,7 @@ export class App extends React.Component {
                     <td>{item}</td>
                     <td className="text-right">
                       <button onClick={(e) => this.removeItem(item)} type="button" className="btn btn-default btn-sm">
-                        Remove
+                        Done
                       </button>
                     </td>
                   </tr>
@@ -93,7 +108,15 @@ export class App extends React.Component {
               })
             }
           </tbody>
+          <tfoot>
+            <tr>
+              <td colSpan="2">&nbsp;</td>
+              <td className="text-right"></td>
+                <button onClick={(e) => this.clearAll()} className="btn btn-default btn-sm">Clear list</button>
+            </tr>
+          </tfoot>
         </table>
+      } 
       </div>
     </div>
     )
